@@ -95,6 +95,14 @@ func SetIcon(iconBytes []byte) {
 		}
 	}
 	err = notifyIcon.SetIcon(icon)
+	notifyIcon.MouseDown().Attach(func(x, y int, button walk.MouseButton) {
+		if button != walk.LeftButton {
+			return
+		}
+
+		notifyIcon.ShowContextMenu()
+	})
+
 	if err != nil {
 		fail("Unable to set systray icon", err)
 	}

@@ -10,7 +10,7 @@ import (
 	"os"
 	"sync/atomic"
 
-	"github.com/lxn/walk"
+	"github.com/ianatha/walk"
 )
 
 var (

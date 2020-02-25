@@ -52,12 +52,12 @@ var (
 // Run initializes GUI and starts the event loop, then invokes the onReady
 // callback. It blocks until systray.Quit() is called.
 // Should be called at the very beginning of main() to lock at main thread.
-func Run(onReady func(), onExit func()) {
+func Run(onReady func(interface{}), onExit func()) {
 	RunWithAppWindow("", 0, 0, onReady, onExit)
 }
 
 // RunWithAppWindow is like Run but also enables an application window with the given title.
-func RunWithAppWindow(title string, width int, height int, onReady func(), onExit func()) {
+func RunWithAppWindow(title string, width int, height int, onReady func(interface{}), onExit func()) {
 	runtime.LockOSThread()
 	atomic.StoreInt64(&hasStarted, 1)
 
@@ -67,11 +67,10 @@ func RunWithAppWindow(title string, width int, height int, onReady func(), onExi
 		// Run onReady on separate goroutine to avoid blocking event loop
 		readyCh := make(chan interface{})
 		go func() {
-			<-readyCh
-			onReady()
+			onReady(<-readyCh)
 		}()
-		systrayReady = func(interface{}) {
-			close(readyCh)
+		systrayReady = func(mw interface{}) {
+			readyCh <- mw
 		}
 	}
 

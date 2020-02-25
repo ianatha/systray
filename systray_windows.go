@@ -6,8 +6,8 @@ import (
 	"crypto/md5"
 	"fmt"
 	"io/ioutil"
-	"path/filepath"
 	"os"
+	"path/filepath"
 	"sync/atomic"
 
 	"github.com/ianatha/walk"
@@ -62,7 +62,7 @@ func nativeLoop(title string, width int, height int) {
 			fail("Unable to set height", err)
 		}
 	}
-	systrayReady()
+	systrayReady(*mainWindow)
 	mainWindow.Run()
 }
 

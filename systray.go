@@ -41,7 +41,7 @@ type MenuItem struct {
 var (
 	log = golog.LoggerFor("systray")
 
-	systrayReady  func()
+	systrayReady  func(interface{})
 	systrayExit   func()
 	menuItems     = make(map[int32]*MenuItem)
 	menuItemsLock sync.RWMutex
@@ -62,7 +62,7 @@ func RunWithAppWindow(title string, width int, height int, onReady func(), onExi
 	atomic.StoreInt64(&hasStarted, 1)
 
 	if onReady == nil {
-		systrayReady = func() {}
+		systrayReady = func(interface{}) {}
 	} else {
 		// Run onReady on separate goroutine to avoid blocking event loop
 		readyCh := make(chan interface{})
@@ -70,7 +70,7 @@ func RunWithAppWindow(title string, width int, height int, onReady func(), onExi
 			<-readyCh
 			onReady()
 		}()
-		systrayReady = func() {
+		systrayReady = func(interface{}) {
 			close(readyCh)
 		}
 	}
